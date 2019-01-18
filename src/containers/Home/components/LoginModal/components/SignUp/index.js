@@ -1,5 +1,17 @@
 import React, { Component } from 'react'
 import { Title, LineInput, SubmitButton, SecondaryOptionText } from './styles'
+import gql from 'graphql-tag'
+import { Mutation } from 'react-apollo';
+
+const ADD_USER = gql`
+ 	mutation addUser($addUserInput: AddUserInput!) {
+addUser(addUserInput: $addUserInput) {
+	email
+  password
+}
+}
+`
+
 
 class SignUp extends Component {
   constructor(props) {
@@ -27,7 +39,15 @@ class SignUp extends Component {
           onChange={e => this.onChange('password', e)}
           type="password"
         />
-        <SubmitButton>Get Started</SubmitButton>
+        <Mutation 
+          mutation={ADD_USER}
+          variables={{ addUserInput: this.state.user }}
+        >
+          {(addUser, { data }) => (
+            <SubmitButton onClick={addUser}>Get Started</SubmitButton>
+          )}
+        </Mutation>
+        
         <SecondaryOptionText onClick={this.props.changeMode}>
           Or Login
         </SecondaryOptionText>
